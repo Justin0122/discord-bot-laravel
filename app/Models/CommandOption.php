@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommandOption extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'command_id',
         'name',
