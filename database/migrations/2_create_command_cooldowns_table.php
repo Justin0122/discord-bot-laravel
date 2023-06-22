@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up()
+    {
+        if (!Schema::hasTable('command_cooldowns')) {
+            Schema::create('command_cooldowns', function (Blueprint $table) {
+                $table->id();
+                $table->string('command_name');
+                $table->integer('cooldown');
+                $table->timestamps();
+            });
+        }
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('command_cooldowns');
+    }
+};

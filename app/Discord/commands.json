@@ -1,0 +1,770 @@
+{
+    "0": {
+        "name": "ping",
+        "description": "Ping the bot to check if it is online",
+        "options": [
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Commands",
+        "cooldown": 5
+    },
+    "1": {
+        "name": "translate",
+        "description": "translate text",
+        "options": [
+            {
+                "type": 3,
+                "name": "text",
+                "name_localizations": null,
+                "description": "text to translate",
+                "description_localizations": null,
+                "required": true,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "to",
+                "name_localizations": null,
+                "description": "language to translate to",
+                "description_localizations": null,
+                "required": true,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "from",
+                "name_localizations": null,
+                "description": "language to translate from (default: auto. Might result in wrong translation!)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Commands",
+        "cooldown": 5
+    },
+    "2": {
+        "name": "help",
+        "description": "Show all commands",
+        "options": [
+            {
+                "type": 3,
+                "name": "command",
+                "name_localizations": null,
+                "description": "command to show help for",
+                "description_localizations": null,
+                "required": false,
+                "choices": [
+                    {
+                        "name": "ping",
+                        "name_localizations": null,
+                        "value": "ping"
+                    },
+                    {
+                        "name": "translate",
+                        "name_localizations": null,
+                        "value": "translate"
+                    },
+                    {
+                        "name": "help",
+                        "name_localizations": null,
+                        "value": "help"
+                    },
+                    {
+                        "name": "updateself",
+                        "name_localizations": null,
+                        "value": "updateself"
+                    },
+                    {
+                        "name": "currentsong",
+                        "name_localizations": null,
+                        "value": "currentsong"
+                    },
+                    {
+                        "name": "songsuggestions",
+                        "name_localizations": null,
+                        "value": "songsuggestions"
+                    },
+                    {
+                        "name": "topsongs",
+                        "name_localizations": null,
+                        "value": "topsongs"
+                    },
+                    {
+                        "name": "spotify",
+                        "name_localizations": null,
+                        "value": "spotify"
+                    },
+                    {
+                        "name": "playlists",
+                        "name_localizations": null,
+                        "value": "playlists"
+                    },
+                    {
+                        "name": "playlistgen",
+                        "name_localizations": null,
+                        "value": "playlistgen"
+                    },
+                    {
+                        "name": "latestsongs",
+                        "name_localizations": null,
+                        "value": "latestsongs"
+                    },
+                    {
+                        "name": "forecast",
+                        "name_localizations": null,
+                        "value": "forecast"
+                    },
+                    {
+                        "name": "weather",
+                        "name_localizations": null,
+                        "value": "weather"
+                    },
+                    {
+                        "name": "astronomy",
+                        "name_localizations": null,
+                        "value": "astronomy"
+                    }
+                ],
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Commands",
+        "cooldown": 10
+    },
+    "3": {
+        "name": "updateself",
+        "description": "Update the bot",
+        "options": [
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you (default: true)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Github",
+        "cooldown": 120
+    },
+    "4": {
+        "name": "currentsong",
+        "description": "Share the song you are currently listening to",
+        "options": [
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Spotify",
+        "cooldown": 30
+    },
+    "5": {
+        "name": "songsuggestions",
+        "description": "Get song suggestions based on your top songs",
+        "options": [
+            {
+                "type": 4,
+                "name": "amount",
+                "name_localizations": null,
+                "description": "amount of songs (default 100)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "genre",
+                "name_localizations": null,
+                "description": "Filter the suggestions by genre (default none) (This does very little)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "mood",
+                "name_localizations": null,
+                "description": "Select an option",
+                "description_localizations": null,
+                "required": false,
+                "choices": [
+                    {
+                        "name": "Happy",
+                        "name_localizations": null,
+                        "value": "happy"
+                    },
+                    {
+                        "name": "Sad",
+                        "name_localizations": null,
+                        "value": "sad"
+                    },
+                    {
+                        "name": "Dance",
+                        "name_localizations": null,
+                        "value": "dance"
+                    }
+                ],
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "queue",
+                "name_localizations": null,
+                "description": "Get the current queue position or remove yourself from the queue",
+                "description_localizations": null,
+                "required": false,
+                "choices": [
+                    {
+                        "name": "Get your position",
+                        "name_localizations": null,
+                        "value": "get"
+                    },
+                    {
+                        "name": "Remove me from queue",
+                        "name_localizations": null,
+                        "value": "remove"
+                    }
+                ],
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Spotify",
+        "cooldown": 120
+    },
+    "6": {
+        "name": "topsongs",
+        "description": "Get the top songs from your liked songs",
+        "options": [
+            {
+                "type": 4,
+                "name": "amount",
+                "name_localizations": null,
+                "description": "amount of songs (default 24 max 50)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Spotify",
+        "cooldown": 60
+    },
+    "7": {
+        "name": "spotify",
+        "description": "Allow the bot to access your spotify account",
+        "options": [
+            {
+                "type": 3,
+                "name": "select",
+                "name_localizations": null,
+                "description": "Select an option",
+                "description_localizations": null,
+                "required": true,
+                "choices": [
+                    {
+                        "name": "Login",
+                        "name_localizations": null,
+                        "value": "login"
+                    },
+                    {
+                        "name": "Logout",
+                        "name_localizations": null,
+                        "value": "logout"
+                    },
+                    {
+                        "name": "Me",
+                        "name_localizations": null,
+                        "value": "me"
+                    }
+                ],
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Spotify",
+        "cooldown": 10
+    },
+    "8": {
+        "name": "playlists",
+        "description": "Get your playlists",
+        "options": [
+            {
+                "type": 4,
+                "name": "amount",
+                "name_localizations": null,
+                "description": "amount of playlists (default 6 max 50)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Spotify",
+        "cooldown": 60
+    },
+    "9": {
+        "name": "playlistgen",
+        "description": "Generate a playlist from within a time frame",
+        "options": [
+            {
+                "type": 3,
+                "name": "startdate",
+                "name_localizations": null,
+                "description": "Start date (YYYY-MM-DD)",
+                "description_localizations": null,
+                "required": true,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 5,
+                "name": "public",
+                "name_localizations": null,
+                "description": "Make playlist public",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Spotify",
+        "cooldown": 120
+    },
+    "10": {
+        "name": "latestsongs",
+        "description": "Get the latest song from your liked songs",
+        "options": [
+            {
+                "type": 4,
+                "name": "amount",
+                "name_localizations": null,
+                "description": "amount of songs (default 24 max 50)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Spotify",
+        "cooldown": 60
+    },
+    "11": {
+        "name": "forecast",
+        "description": "Get the forecast for the next 3 days",
+        "options": [
+            {
+                "type": 3,
+                "name": "country",
+                "name_localizations": null,
+                "description": "The country you want to get the weather of",
+                "description_localizations": null,
+                "required": true,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "city",
+                "name_localizations": null,
+                "description": "The city you want to get the weather of",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you (default: false)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Weather",
+        "cooldown": 20
+    },
+    "12": {
+        "name": "weather",
+        "description": "Get the current weather",
+        "options": [
+            {
+                "type": 3,
+                "name": "country",
+                "name_localizations": null,
+                "description": "The country you want to get the weather of",
+                "description_localizations": null,
+                "required": true,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "city",
+                "name_localizations": null,
+                "description": "The city you want to get the weather of",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "country2",
+                "name_localizations": null,
+                "description": "The country you want to get the weather of",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "city2",
+                "name_localizations": null,
+                "description": "The city you want to get the weather of",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you (default: false)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Weather",
+        "cooldown": 30
+    },
+    "13": {
+        "name": "astronomy",
+        "description": "Get the astronomical data for today",
+        "options": [
+            {
+                "type": 3,
+                "name": "country",
+                "name_localizations": null,
+                "description": "The country you want to get the astronomical data of",
+                "description_localizations": null,
+                "required": true,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 3,
+                "name": "city",
+                "name_localizations": null,
+                "description": "The city you want to get the astronomical data of",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            },
+            {
+                "type": 5,
+                "name": "ephemeral",
+                "name_localizations": null,
+                "description": "Send the message only to you (default: false)",
+                "description_localizations": null,
+                "required": false,
+                "choices": null,
+                "options": [],
+                "channel_types": null,
+                "min_value": null,
+                "max_value": null,
+                "min_length": null,
+                "max_length": null,
+                "autocomplete": null
+            }
+        ],
+        "guild_id": null,
+        "category": "Weather",
+        "cooldown": 30
+    }
+}
