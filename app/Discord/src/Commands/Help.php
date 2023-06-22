@@ -9,6 +9,8 @@ use App\Discord\src\Events\Error;
 use App\Discord\src\Events\Info;
 use Discord\Discord;
 use App\Discord\src\SlashIndex;
+use App\Models\CommandCooldown;
+use App\Models\CommandOption;
 
 class Help
 {
@@ -66,19 +68,20 @@ class Help
         }
 
         $embedFields = [];
-        $commands = json_decode(file_get_contents(__DIR__.'/../../commands.json'), true);
+        $commands = CommandCooldown::where('public', 1)->get()->sortBy('category')->toArray();
         $perPage = 4;
 
         if ($command === null) {
             foreach ($commands as $command) {
+                $command['options'] = CommandOption::where('command_id', $command['id'])->get()->toArray();
                 $embedFields = $this->getFields($command, $embedFields);
             }
             $title = 'Help';
-            $description = 'All commands';
         } else {
             $count = 0;
             $title = 'Help for: **' . $command . '**' . PHP_EOL . PHP_EOL;
             foreach ($commands as $command) {
+                $command['options'] = CommandOption::where('command_id', $command['id'])->get()->toArray();
                 if ($command['name'] === $options['command']->value) {
                     $embedFields = $this->getFields($command, $embedFields, $count);
                     $count++;
@@ -107,14 +110,18 @@ class Help
     public function getFields(array $command, array $embedFields, ?int $count = null): array
     {
         $options = '';
-        foreach ($command['options'] as $option) {
-            $prefix = $option['required'] ? '-' : '+';
-            $options .= "{$prefix} {$option['name']}\n";
+        if (!empty($command['options'])) {
+            foreach ($command['options'] as $option) {
+                $prefix = $option['required'] ? '-' : '+';
+                $options .= "{$prefix} {$option['name']}\n";
+            }
+        } else {
+            $options = 'No options';
         }
 
         $embedFields[] = [
-            'name' => '/' . $command['name'],
-            'value' => "```{$command['description']}```\n```diff\n{$options}```\n```fix\nCooldown: {$command['cooldown']} seconds```",
+            'name' => '/' . $command['command_name'],
+            'value' => "```{$command['command_description']}```\n```diff\n{$options}```\n```fix\nCooldown: {$command['cooldown']} seconds```",
             'inline' => false
         ];
 

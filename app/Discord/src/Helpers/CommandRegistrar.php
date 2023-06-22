@@ -4,11 +4,59 @@ namespace App\Discord\src\Helpers;
 
 use App\Discord\Bot;
 use App\Models\CommandCooldown;
+use App\Models\CommandOption;
 use Discord\Parts\Interactions\Command\Command;
 use Discord\Discord;
 
 class CommandRegistrar
 {
+    /**
+     * @throws \Exception
+     */
+    private static function registerCommand(Command $command, ?string $guildId): void
+    {
+        if ($guildId) {
+            $guild = Bot::getDiscord()?->guilds?->offsetGet($guildId);
+
+            if ($guild) {
+                $guild->commands->save($command);
+                echo "Registered command: {$command->name} to guild: {$guildId}\n";
+            }
+        } else {
+            Bot::getDiscord()?->application?->commands->save($command);
+            echo "Registered command: {$command->name}\n";
+        }
+    }
+
+    private static function registerCommandOptions(int $commandId, array $options): void
+    {
+        foreach ($options as $option) {
+            $optionData = [
+                'command_id' => $commandId,
+                'name' => $option['name'],
+                'description' => $option['description'],
+                'required' => $option['required'],
+                'type' => $option['type'],
+                'choices' => isset($option['choices']) ? json_encode($option['choices']) : null,
+                'options' => isset($option['options']) ? json_encode($option['options']) : null,
+                'channel_types' => isset($option['channel_types']) ? json_encode($option['channel_types']) : null,
+                'min_value' => $option['min_value'] ?? null,
+                'max_value' => $option['max_value'] ?? null,
+                'min_length' => $option['min_length'] ?? null,
+                'max_length' => $option['max_length'] ?? null,
+                'autocomplete' => $option['autocomplete'] ?? null,
+            ];
+
+            CommandOption::updateOrCreate(
+                ['command_id' => $commandId, 'name' => $option['name']],
+                $optionData
+            );
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
     public static function register(Discord $discord): void
     {
         $phpFiles = self::scanDirectory(__DIR__ . '/../Commands');
@@ -19,6 +67,7 @@ class CommandRegistrar
             $className = 'App\\Discord\\src\\Commands\\' . self::getClassNameFromFilename($phpFile);
             if (class_exists($className)) {
                 $commandInstance = new $className();
+                $folderName = explode('/', $phpFile)[count(explode('/', $phpFile)) - 2];
 
                 $name = strtolower((new \ReflectionClass($className))->getShortName());
                 $description = $commandInstance->getDescription();
@@ -26,35 +75,37 @@ class CommandRegistrar
                 $guildId = $commandInstance->getGuildId();
 
                 $commandData = compact('name', 'description', 'options') + ['default_permission' => true];
+                $command = new Command(Bot::getDiscord(), $commandData);
 
-                if ($guildId) {
-                    $guild = Bot::getDiscord()?->guilds?->offsetGet($guildId);
+                self::registerCommand($command, $guildId);
 
-                    if ($guild) {
-                        $command = new Command(Bot::getDiscord(), $commandData);
-                        $guild->commands->save($command);
-                        echo "Registered command: {$name} to guild: {$guildId}\n";
+                $commandCooldown = $commandInstance->getCooldown();
+                if ($commandCooldown) {
+                    $public = $guildId ? 0 : 1;
+
+
+                    $commandCooldown = CommandCooldown::updateOrCreate([
+                        'command_name' => $name,
+                    ], [
+                        'category' => $folderName ?? 'Uncategorized',
+                        'command_description' => $description,
+                        'cooldown' => $commandCooldown,
+                        'public' => $public
+                    ]);
+
+                    $commandId = $commandCooldown->id;
+
+                    if ($options) {
+                        self::registerCommandOptions($commandId, $options);
                     }
-                } else {
-                    $command = new Command(Bot::getDiscord(), $commandData);
-                    Bot::getDiscord()?->application?->commands->save($command);
-                    echo "Registered command: {$name}\n";
                 }
             }
-
-            $commandCooldown = $commandInstance->getCooldown();
-            if ($commandCooldown) {
-                CommandCooldown::updateOrCreate([
-                    'command_name' => $name,
-                ], [
-                    'cooldown' => $commandCooldown,
-                ]);
-            }
-
         }
     }
 
+
     private static $commandCache = null;
+    private static $commandOptionsCache = [];
 
     /**
      * @throws \ReflectionException
@@ -69,14 +120,31 @@ class CommandRegistrar
                 require_once $filename;
                 $className = 'App\\Discord\\src\\Commands\\' . self::getClassNameFromFilename($filename);
                 $commandClasses[strtolower((new \ReflectionClass($className))->getShortName())] = new $className();
-                $commandClass = $commandClasses[strtolower((new \ReflectionClass($className))->getShortName())];
-                $commandCooldown = $commandClass->getCooldown() ?? 5;
             }
 
             self::$commandCache = $commandClasses;
         }
 
         return self::$commandCache[$command] ?? null;
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public static function getCommandOptionsByName($command)
+    {
+        if (!isset(self::$commandOptionsCache[$command])) {
+            $commandInstance = self::getCommandByName($command);
+
+            if ($commandInstance) {
+                $commandOptions = $commandInstance->getOptions();
+                self::$commandOptionsCache[$command] = $commandOptions;
+            } else {
+                self::$commandOptionsCache[$command] = null;
+            }
+        }
+
+        return self::$commandOptionsCache[$command];
     }
 
     private static function scanDirectory($directory): array

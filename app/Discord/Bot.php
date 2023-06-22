@@ -12,6 +12,7 @@ use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\User\Activity;
 use Discord\WebSockets\Event;
 use Discord\WebSockets\Intents;
+use App\Discord\src\Utils\GenerateCommandsTable;
 
 class Bot
 {
@@ -36,6 +37,8 @@ class Bot
             $discord->updatePresence($activity);
 
             CommandRegistrar::register($discord);
+            GenerateCommandsTable::generateCommandsTable();
+
         });
 
         $this->discord->on(Event::INTERACTION_CREATE, function (Interaction $interaction, Discord $discord) {

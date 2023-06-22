@@ -14,8 +14,11 @@ return new class extends Migration
         if (!Schema::hasTable('command_cooldowns')) {
             Schema::create('command_cooldowns', function (Blueprint $table) {
                 $table->id();
+                $table->string('category');
                 $table->string('command_name');
+                $table->string('command_description')->nullable();
                 $table->integer('cooldown');
+                $table->integer('public')->default(1);
                 $table->timestamps();
             });
         }
