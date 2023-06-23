@@ -69,7 +69,7 @@ class CommandRegistrar
                 $commandInstance = new $className();
                 $folderName = explode('/', $phpFile)[count(explode('/', $phpFile)) - 2];
 
-                $name = strtolower((new \ReflectionClass($className))->getShortName());
+                $name = self::getShortName($className);
                 $description = $commandInstance->getDescription();
                 $options = $commandInstance->getOptions();
                 $guildId = $commandInstance->getGuildId();
@@ -83,15 +83,15 @@ class CommandRegistrar
                 if ($commandCooldown) {
                     $public = $guildId ? 0 : 1;
 
-
-                    $commandCooldown = CommandCooldown::updateOrCreate([
-                        'command_name' => $name,
-                    ], [
-                        'category' => $folderName ?? 'Uncategorized',
-                        'command_description' => $description,
-                        'cooldown' => $commandCooldown,
-                        'public' => $public
-                    ]);
+                    $commandCooldown = CommandCooldown::updateOrCreate(
+                        ['command_name' => $name],
+                        [
+                            'category' => $folderName ?? 'Uncategorized',
+                            'command_description' => $description,
+                            'cooldown' => $commandCooldown,
+                            'public' => $public
+                        ]
+                    );
 
                     $commandId = $commandCooldown->id;
 
@@ -103,12 +103,21 @@ class CommandRegistrar
         }
     }
 
+    private static function getShortName(string $className): string
+    {
+        $className = trim($className, '\\');
+        $lastBackslashPos = strrpos($className, '\\');
+        $className = ($lastBackslashPos === false) ? $className : substr($className, $lastBackslashPos + 1);
+        $commandName = strtolower($className);
+
+        return $commandName;
+    }
 
     private static $commandCache = null;
     private static $commandOptionsCache = [];
 
     /**
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public static function getCommandByName($command)
     {
@@ -119,7 +128,7 @@ class CommandRegistrar
             foreach ($commandFiles as $filename) {
                 require_once $filename;
                 $className = 'App\\Discord\\src\\Commands\\' . self::getClassNameFromFilename($filename);
-                $commandClasses[strtolower((new \ReflectionClass($className))->getShortName())] = new $className();
+                $commandClasses[strtolower(self::getShortName($className))] = new $className();
             }
 
             self::$commandCache = $commandClasses;
@@ -129,7 +138,7 @@ class CommandRegistrar
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public static function getCommandOptionsByName($command)
     {
