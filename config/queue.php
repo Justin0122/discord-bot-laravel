@@ -77,7 +77,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Job Batching
+    | Job.php Batching
     |--------------------------------------------------------------------------
     |
     | The following options configure the database and table that store job
