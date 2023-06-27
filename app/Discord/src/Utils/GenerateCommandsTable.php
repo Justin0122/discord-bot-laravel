@@ -2,7 +2,7 @@
 
 namespace App\Discord\src\Utils;
 
-use App\Models\CommandCooldown;
+use App\Models\Command;
 
 class GenerateCommandsTable
 {
@@ -16,7 +16,7 @@ class GenerateCommandsTable
 |------------------|------------------------------------------------|----------------------------------------------------------------------------|';
         $tableRows = '';
 
-        $commands = CommandCooldown::with('options')->where('public', 1)->orderBy('category')->get();
+        $commands = Command::with('options')->where('public', 1)->orderBy('category')->get();
 
         foreach ($commands as $command) {
             $commandName = $command->command_name;

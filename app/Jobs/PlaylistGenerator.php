@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Discord\src\Models\Spotify;
 use App\Discord\src\Models\Spotify as SpotifyModel;
+use Discord\Exceptions\IntentException;
+use Discord\Parts\Interactions\Interaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,7 +16,7 @@ use Illuminate\Queue\SerializesModels;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class PlaylistGenerator implements ShouldQueue
+class PlaylistGenerator extends DiscordJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -23,19 +25,26 @@ class PlaylistGenerator implements ShouldQueue
     public string $mood;
     public string $user_id;
     public string $link;
+    protected Interaction $interaction;
+    protected bool $ephemeral;
 
     /**
      * Create a new job instance.
      *
      * @return void
+     * @throws IntentException
      */
-    public function __construct(int $amount, string $genre, string $mood, string $user_id)
+    public function __construct($user_id, $interaction, $ephemeral = false, $amount = 10, $genre = '', $mood = '')
     {
+        parent::__construct();
+        $this->user_id = $user_id;
+        $this->interaction = $interaction;
+        $this->ephemeral = $ephemeral;
         $this->amount = $amount;
         $this->genre = $genre;
         $this->mood = $mood;
-        $this->user_id = $user_id;
-        echo 'Job created' . PHP_EOL;
+
+        $this->handle();
     }
 
     /**

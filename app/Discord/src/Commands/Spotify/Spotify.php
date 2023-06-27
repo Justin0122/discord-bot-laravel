@@ -2,6 +2,7 @@
 
 namespace App\Discord\src\Commands\Spotify;
 
+use App\Jobs\SpotifyUser;
 use Discord\Parts\Interactions\Interaction;
 use Discord\Builders\Components\ActionRow;
 use App\Discord\src\Models\Spotify as SpotifyModel;
@@ -69,38 +70,32 @@ class Spotify
         $logout = $optionRepository['select']->value === 'logout';
         $me = $optionRepository['select']->value === 'me';
         $ephemeral = $optionRepository['ephemeral']->value ?? false;
-        $guildId = $_ENV['DISCORD_GUILD_ID'];
+        $me = SpotifyModel::connect($user_id);
 
-        if ($guildId !== $interaction->guild_id) {
-            Error::sendError($interaction, $discord, 'This command is not available in this server (yet)');
-            return;
-        }
 
-        InitialEmbed::Send($interaction, $discord,'Fetching your data', true);
-
-        $pid = pcntl_fork();
-        if ($pid == -1) {
-            die('could not fork');
-        } else if ($pid) {
-            //parent
-        } else {
-            $me = $this->connect($user_id);
-            //child
-            if ($login) {
+        switch (true) {
+            case $login:
                 $this->login($interaction, $discord, $user_id, $me);
-            } elseif ($logout) {
+                break;
+            case $logout:
                 $this->logout($interaction, $discord, $user_id, $me);
-            } elseif ($me) {
-                $this->me($interaction, $discord, $user_id, $ephemeral, $me);
-            }
-        }
+                break;
+            case $me:
+                dispatch(new SpotifyUser($user_id, $interaction, $ephemeral));
+                InitialEmbed::Send($interaction, $discord, 'Please wait while we are fetching your profile', true);
 
+                break;
+        }
+    }
+
+    public function me(Interaction $interaction, $user_id, $channel_id): void
+    {
     }
 
     private function login(Interaction $interaction, Discord $discord, $user_id, $me): void
     {
         if ($me){
-            Error::sendError($interaction, $discord, 'You are already connected to Spotify', true, true);
+            Error::sendError($interaction, $discord, 'You are already connected to Spotify');
             return;
         }
 
@@ -110,74 +105,12 @@ class Spotify
 
         $messageBuilder = MessageBuilder::buildMessage($builder);
 
-        $interaction->sendFollowUpMessage($messageBuilder, true);
-        $interaction->deleteOriginalResponse();
+        $interaction->respondWithMessage($messageBuilder, true);
     }
 
-    private function logout(Interaction $interaction, Discord $discord, $user_id): void
+    private function logout(Interaction $interaction, Discord $discord): void
     {
-        $this->connect($user_id);
-
-        Error::sendError($interaction, $discord, 'Not implemented yet', true, true);
+        Error::sendError($interaction, $discord, 'Not implemented yet');
     }
 
-    private function me(Interaction $interaction, Discord $discord, $user_id, $ephemeral, $me): void
-    {
-        if (!$me){
-            Error::sendError($interaction, $discord, 'You are not connected to Spotify. Please use /spotify [Login] first', true);
-        }
-        $builder = Success::sendSuccess($discord, $me->display_name, '', $interaction);
-        $builder->addField('Followers', $me->followers->total, true);
-        $builder->addField('Country', $me->country, true);
-        $builder->addField('Plan', $me->product, true);
-
-        $spotify = new SpotifyModel();
-        $topSongs = $spotify->getTopSongs($user_id, 3);
-
-        if ($topSongs !== null && count($topSongs->items) > 0) {
-            $topSongsField = "";
-            foreach ($topSongs->items as $song) {
-                $songName = $song->name;
-                $artistName = $song->artists[0]->name;
-                $songLink = $song->external_urls->spotify;
-                $topSongsField .= "> [{$songName}]({$songLink}) - {$artistName}\n";
-            }
-            $builder->addField('Top Songs', $topSongsField, true);
-        } else {
-            $builder->addField('Top Songs', 'No songs found', true);
-        }
-        if (isset($me->images[0]->url)) {
-            $builder->setThumbnail($me->images[0]->url);
-        }
-
-        $currentSong = $spotify->getCurrentSong($user_id);
-        $builder->addField('Currently listening to',"> " . $currentSong->item->name . ' - ' . $currentSong->item->artists[0]->name, false ?? 'No song playing');
-
-        $actionRow = ActionRow::new();
-        ButtonBuilder::addLinkButton($actionRow, 'Open profile', $me->external_urls->spotify);
-
-        if ($currentSong->item->external_urls->spotify) {
-            ButtonBuilder::addLinkButton($actionRow, 'Listen along', $currentSong->item->external_urls->spotify);
-        }
-
-        $messageBuilder = MessageBuilder::buildMessage($builder, [$actionRow]);
-        EphemeralResponse::send($interaction, $messageBuilder, $ephemeral, true);
-
-
-    }
-
-    private function connect($user_id): ?object
-    {
-        try {
-            $me = new SpotifyModel();
-            $me = $me->getMe($user_id);
-            if (!$me) {
-                return null;
-            }
-            return $me;
-        } catch (\Exception $e) {
-
-        }
-        return null;
-    }
 }

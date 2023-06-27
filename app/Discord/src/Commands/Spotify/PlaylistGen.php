@@ -2,6 +2,7 @@
 
 namespace App\Discord\src\Commands\Spotify;
 
+use App\Jobs\PlaylistGenerator;
 use Discord\Builders\Components\ActionRow;
 use Discord\Parts\Interactions\Interaction;
 use App\Discord\src\Events\EphemeralResponse;
@@ -80,7 +81,6 @@ class PlaylistGen
         $startDateString = $startDate ?? null;
         $dates = $this->calculateMonthRange($startDateString);
         $startDate = $dates['startDate'];
-        $endDate = $dates['endDate'];
 
         //if the month is the same as the current month, we can't generate a playlist
         if ($startDate->format('m') == (new DateTime())->format('m')) {
@@ -88,46 +88,12 @@ class PlaylistGen
             return;
         }
 
-        $playlistTitle = 'Liked Songs of ' . $startDate->format('M Y') .'.';
+        $playlistTitle = 'Liked Songs of ' . $startDate->format('M Y') . '.';
 
 
         InitialEmbed::Send($interaction, $discord, 'Generating playlist with title: ' . $playlistTitle, true);
 
-        $pid = pcntl_fork();
-        if ($pid == -1) {
-            die('could not fork');
-        } else if ($pid) {
-            //parent
-        } else {
-            //child
-            $this->generatePlaylist($user_id, $startDate, $endDate, $public, $discord, $interaction, $playlistTitle, $ephemeral);
-        }
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function generatePlaylist($user_id, $startDate, $endDate, $public, Discord $discord, Interaction $interaction, $playlistTitle, $ephemeral): void
-    {
-        $spotify = new Spotify();
-        $playlist = $spotify->generatePlaylist($user_id, $startDate, $endDate, $public);
-        $me = $spotify->getMe($user_id);
-
-        if ($playlist) {
-            echo $playlist[0] . PHP_EOL;
-            $builder = Success::sendSuccess($discord, 'Playlist generated for: ' . $me->display_name, 'Playlist generated with title: ' . $playlistTitle, $interaction);
-            $builder->setFooter($interaction);
-            $builder->setUrl($playlist[0]);
-            $actionRow = ActionRow::new();
-            ButtonBuilder::addLinkButton($actionRow, 'Open playlist', $playlist[0]);
-
-            $messageBuilder = MessageBuilder::buildMessage($builder, [$actionRow]);
-
-            EphemeralResponse::send($interaction, $messageBuilder, $ephemeral);
-        }
-        else{
-            Error::sendError($interaction, $discord, 'Something went wrong while generating the playlist');
-        }
+        dispatch(new PlaylistGenerator($user_id, $interaction, $ephemeral));
     }
 
     /**

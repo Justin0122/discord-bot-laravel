@@ -15,7 +15,7 @@ return new class extends Migration
             Schema::create('user_cooldowns', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('discord_id')->references('discord_id')->on('users')->onDelete('cascade');
-                $table->foreignId('command_id')->constrained('command_cooldowns');
+                $table->foreignId('command_id')->constrained('commands');
                 $table->timestamps();
             });
         }

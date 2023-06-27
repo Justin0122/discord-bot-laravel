@@ -2,14 +2,14 @@
 
 namespace App\Discord\src\Helpers;
 
-use App\Models\CommandCooldown;
+use App\Models\Command;
 use App\Models\UserCooldown;
 
 class CommandCooldownManager
 {
     public static function checkCooldown($userId, $commandName, $cooldownDuration)
     {
-        $commandCooldown = CommandCooldown::where('command_name', $commandName)->first();
+        $commandCooldown = Command::where('command_name', $commandName)->first();
         if ($commandCooldown) {
             $userCooldown = UserCooldown::where('discord_id', $userId)->where('command_id', $commandCooldown->id)->first();
             $currentTimestamp = time();

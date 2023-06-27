@@ -3,7 +3,7 @@
 namespace App\Discord\src\Helpers;
 
 use App\Discord\Bot;
-use App\Models\CommandCooldown;
+use App\Models\Command as CommandModel;
 use App\Models\CommandOption;
 use Discord\Parts\Interactions\Command\Command;
 use Discord\Discord;
@@ -83,7 +83,7 @@ class CommandRegistrar
                 if ($commandCooldown) {
                     $public = $guildId ? 0 : 1;
 
-                    $commandCooldown = CommandCooldown::updateOrCreate(
+                    $commandCooldown = CommandModel::updateOrCreate(
                         ['command_name' => $name],
                         [
                             'category' => $folderName ?? 'Uncategorized',

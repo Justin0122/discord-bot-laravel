@@ -9,7 +9,7 @@ use App\Discord\src\Events\Error;
 use App\Discord\src\Events\Info;
 use Discord\Discord;
 use App\Discord\src\SlashIndex;
-use App\Models\CommandCooldown;
+use App\Models\Command;
 use App\Models\CommandOption;
 
 class Help
@@ -21,13 +21,15 @@ class Help
 
     public function getOptions(): array
     {
-        $commands = json_decode(file_get_contents(__DIR__.'/../../commands.json'), true);
-        $choices = array_map(function ($command) {
-            return [
-                'name' => $command['name'],
-                'value' => $command['name']
+        $commands = Command::where('public', 1)->get(['command_name'])->toArray();
+        $choices = [];
+
+        foreach ($commands as $command) {
+            $choices[] = [
+                'name' => $command['command_name'],
+                'value' => $command['command_name']
             ];
-        }, $commands);
+        }
 
         return [
             [
@@ -44,6 +46,8 @@ class Help
                 'required' => false
             ]
         ];
+
+
     }
 
     public function getGuildId(): ?string
@@ -58,6 +62,8 @@ class Help
 
     public function handle(Interaction $interaction, Discord $discord): void
     {
+        $commands = Command::where('public', 1)->get()->sortBy('category')->toArray();
+
         $options = $interaction->data->options;
         $command = $options['command']?->value;
         $ephemeral = $options['ephemeral']?->value ?? false;
@@ -68,7 +74,7 @@ class Help
         }
 
         $embedFields = [];
-        $commands = CommandCooldown::where('public', 1)->get()->sortBy('category')->toArray();
+
         $perPage = 4;
 
         if ($command === null) {
@@ -82,7 +88,7 @@ class Help
             $title = 'Help for: **' . $command . '**' . PHP_EOL . PHP_EOL;
             foreach ($commands as $command) {
                 $command['options'] = CommandOption::where('command_id', $command['id'])->get()->toArray();
-                if ($command['name'] === $options['command']->value) {
+                if ($command['command_name'] === $options['command']->value) {
                     $embedFields = $this->getFields($command, $embedFields, $count);
                     $count++;
                 }

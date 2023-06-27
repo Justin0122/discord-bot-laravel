@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('command_cooldowns')) {
-            Schema::create('command_cooldowns', function (Blueprint $table) {
+        if (!Schema::hasTable('commands')) {
+            Schema::create('commands', function (Blueprint $table) {
                 $table->id();
                 $table->string('category');
                 $table->string('command_name');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('command_cooldowns');
+        Schema::dropIfExists('commands');
     }
 };

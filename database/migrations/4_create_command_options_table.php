@@ -14,7 +14,7 @@ return new class extends Migration
         if (!Schema::hasTable('command_options')) {
             Schema::create('command_options', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('command_id')->references('id')->on('command_cooldowns')->onDelete('cascade');
+                $table->foreignId('command_id')->references('id')->on('commands')->onDelete('cascade');
                 $table->string('name');
                 $table->string('description')->nullable();
                 $table->boolean('required')->default(false);

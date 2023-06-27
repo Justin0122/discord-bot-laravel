@@ -16,6 +16,6 @@ class UserCooldown extends Model
 
     public function commandCooldown(): BelongsTo
     {
-        return $this->belongsTo(CommandCooldown::class, 'command_id');
+        return $this->belongsTo(Command::class, 'command_id');
     }
 }

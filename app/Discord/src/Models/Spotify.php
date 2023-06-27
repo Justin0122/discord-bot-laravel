@@ -4,6 +4,7 @@ namespace App\Discord\src\Models;
 
 use App\Discord\src\Helpers\SessionHandler;
 use App\Discord\src\Helpers\TokenHandler;
+use App\Discord\src\Models\Spotify as SpotifyModel;
 use DateTime;
 use Dotenv\Dotenv;
 
@@ -388,4 +389,19 @@ class Spotify
 //        }
 //        return $values;
 //    }
+
+    public static function connect($user_id): ?object
+    {
+        try {
+            $me = new SpotifyModel();
+            $me = $me->getMe($user_id);
+            if (!$me) {
+                return null;
+            }
+            return $me;
+        } catch (\Exception $e) {
+
+        }
+        return null;
+    }
 }

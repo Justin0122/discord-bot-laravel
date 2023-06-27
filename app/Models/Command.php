@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CommandCooldown extends Model
+class Command extends Model
 {
     protected $fillable = ['command_name', 'category', 'cooldown', 'command_description', 'public'];
 
