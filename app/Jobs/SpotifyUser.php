@@ -17,7 +17,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class SpotifyUser extends DiscordJob implements ShouldQueue
+class SpotifyUser extends DiscordJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -37,12 +37,8 @@ class SpotifyUser extends DiscordJob implements ShouldQueue
         $this->ephemeral = $ephemeral;
     }
 
-    /**
-     */
     public function handle(): void
     {
-        sleep(5);
-
         $interaction = $this->interaction;
         $me = SpotifyModel::connect($this->user_id);
 

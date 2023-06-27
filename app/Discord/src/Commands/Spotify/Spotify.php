@@ -81,9 +81,8 @@ class Spotify
                 $this->logout($interaction, $discord, $user_id, $me);
                 break;
             case $me:
-                dispatch(new SpotifyUser($user_id, $interaction, $ephemeral));
                 InitialEmbed::Send($interaction, $discord, 'Please wait while we are fetching your profile', true);
-
+                dispatch(new SpotifyUser($user_id, $interaction, $ephemeral));
                 break;
         }
     }
