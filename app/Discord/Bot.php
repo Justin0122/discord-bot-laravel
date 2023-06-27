@@ -5,6 +5,7 @@ namespace App\Discord;
 use App\Discord\src\Events\Error;
 use App\Discord\src\Helpers\CommandCooldownManager;
 use App\Discord\src\Helpers\CommandRegistrar;
+use App\Discord\src\Helpers\RemoveAllCommands;
 use App\Models\User;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
@@ -37,6 +38,7 @@ class Bot
             $discord->updatePresence($activity);
 
             CommandRegistrar::register($discord);
+//            RemoveAllCommands::deleteAllCommands($discord);
             GenerateCommandsTable::generateCommandsTable();
 
         });

@@ -84,7 +84,6 @@ class Spotify
                 InitialEmbed::Send($interaction, $discord, 'Please wait while we are fetching your profile', true);
 
                 SpotifyUser::dispatch($user_id, $interaction, $ephemeral);
-
                 break;
         }
     }
