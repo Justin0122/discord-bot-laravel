@@ -6,8 +6,9 @@ use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Interactions\Interaction;
 use Discord\WebSockets\Intents;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-abstract class DiscordJob
+abstract class DiscordJob implements ShouldQueue
 {
     public Discord $discord;
 
