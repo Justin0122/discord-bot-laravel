@@ -2,13 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Discord\src\Builders\ButtonBuilder;
 use App\Discord\src\Builders\EmbedBuilder;
-use Discord\Builders\MessageBuilder;
-use Discord\Parts\Embed\Embed;
-use App\Discord\src\Events\Error;
 use App\Discord\src\Models\Spotify as SpotifyModel;
-use Discord\Builders\Components\ActionRow;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Interactions\Interaction;
 use Discord\WebSockets\Intents;
@@ -25,9 +20,9 @@ class SpotifyUser implements ShouldQueue
 
     protected string $user_id;
     protected bool $ephemeral;
-    public Discord $discord;
     protected string $channel_id;
-    public Interaction $interaction;
+    private Interaction $interaction;
+    protected string $avatarUrl;
 
     /**
      * Create a new job instance.
@@ -35,9 +30,9 @@ class SpotifyUser implements ShouldQueue
     public function __construct($user_id, $ephemeral = false, $interaction = null)
     {
         $this->user_id = $user_id;
-        $this->interaction = $interaction;
-        $this->channel_id = $this->interaction->channel_id;
         $this->ephemeral = $ephemeral;
+        $this->channel_id = $interaction->channel_id;
+        $this->avatarUrl = $interaction->member->user->avatar;
     }
 
     /**
@@ -57,9 +52,10 @@ class SpotifyUser implements ShouldQueue
 
                 $builder = new EmbedBuilder($discord);
                 $builder->setTitle($me->display_name);
+                $builder->setUrl($me->external_urls->spotify);
                 $builder->setDescription('');
                 $builder->setSuccess();
-
+                $builder->setFooterWithAvatar($me->display_name, $me->images[0]->url);
                 $builder->addField('Followers', $me->followers->total, true);
                 $builder->addField('Country', $me->country, true);
                 $builder->addField('Product', $me->product, true);
@@ -91,12 +87,10 @@ class SpotifyUser implements ShouldQueue
                 }
 
                 $embed = $builder->build();
-                    $channel = $discord->getChannel($channel_id);
-                    $channel?->sendEmbed($embed)->done(function () {
-                        $this->discord->close();
-                    });
-
-
+                $channel = $discord->getChannel($channel_id);
+                $channel?->sendMessage('<@' . $this->user_id . '>', false, $embed)->done(function() {
+                    $this->discord->close();
+                });
             });
         $this->discord->run();
     }

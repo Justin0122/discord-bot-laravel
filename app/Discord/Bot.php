@@ -61,7 +61,7 @@ class Bot
                 $cooldownDuration = $command->getCooldown();
                 $remainingTime = CommandCooldownManager::checkCooldown($userId, $interaction->data->name, $cooldownDuration);
 
-                if ($remainingTime > 0) {
+                if ($remainingTime > 0 && $userId != $_ENV['DISCORD_BOT_OWNER_ID']) {
                     Error::sendError($interaction, $discord, 'Please wait ' . $remainingTime . ' seconds before using this command again');
                     return;
                 }

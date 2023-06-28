@@ -37,12 +37,6 @@ class PlaylistGen
                 'description' => 'Make playlist public',
                 'type' => 5,
                 'required' => false
-            ],
-            [
-                'name' => 'ephemeral',
-                'description' => 'Send the message only to you',
-                'type' => 5,
-                'required' => false
             ]
         ];
     }
@@ -66,7 +60,6 @@ class PlaylistGen
         $optionRepository = $interaction->data->options;
         $startDate = $optionRepository['startdate']->value;
         $public = $optionRepository['public']->value ?? false;
-        $ephemeral = $optionRepository['ephemeral']->value ?? false;
 
         if ($startDate && new DateTime($startDate) > new DateTime()) {
             Error::sendError($interaction, $discord, 'Start date cannot be in the future');
@@ -78,9 +71,13 @@ class PlaylistGen
             return;
         }
 
+
+
+
         $startDateString = $startDate ?? null;
         $dates = $this->calculateMonthRange($startDateString);
         $startDate = $dates['startDate'];
+        $endDate = $dates['endDate'];
 
         //if the month is the same as the current month, we can't generate a playlist
         if ($startDate->format('m') == (new DateTime())->format('m')) {
@@ -88,12 +85,11 @@ class PlaylistGen
             return;
         }
 
-        $playlistTitle = 'Liked Songs of ' . $startDate->format('M Y') . '.';
 
+        InitialEmbed::Send($interaction, $discord, 'Please wait', true)->done(function () use ($startDate, $endDate, $interaction, $discord, $user_id, $public) {
+            PlaylistGenerator::dispatch($user_id, $interaction, $startDate, $endDate, $public, 'liked');
+        });
 
-        InitialEmbed::Send($interaction, $discord, 'Generating playlist with title: ' . $playlistTitle, true);
-
-        dispatch(new PlaylistGenerator($user_id, $interaction, $ephemeral));
     }
 
     /**

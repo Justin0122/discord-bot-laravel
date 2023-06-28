@@ -104,4 +104,10 @@ class EmbedBuilder
         return $this->embed;
     }
 
+    public function setFooterWithAvatar($display_name, $url)
+    {
+        $this->embed->setFooter($display_name, $url);
+        return $this;
+    }
+
 }
