@@ -44,6 +44,7 @@ To generate a new command file, run `php MakeCommand.php [Command] [Command Dire
 | Category         | Command                                        | Description                                                                |
 |------------------|------------------------------------------------|----------------------------------------------------------------------------|
 | Commands   | `/help [command] [ephemeral]`                       | Show all commands                                 |
+| Commands   | `/job [ephemeral]`                       | Ping the bot to check if it is online                                 |
 | Commands   | `/ping [ephemeral]`                       | Ping the bot to check if it is online                                 |
 | Commands   | `/search [query] [safe] [ephemeral]`                       | Search google for a query                                 |
 | Commands   | `/translate [text] [to] [from] [ephemeral]`                       | translate text                                 |

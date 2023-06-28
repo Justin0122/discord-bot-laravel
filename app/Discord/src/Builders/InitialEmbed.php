@@ -7,7 +7,7 @@ use Discord\Discord;
 
 class InitialEmbed
 {
-    public static function Send(Interaction $interaction, Discord $discord, $message = "Please wait", $ephemeral = false): void
+    public static function Send(Interaction $interaction, Discord $discord, $message = "Please wait", $ephemeral = false)
     {
         $builder = new EmbedBuilder($discord);
         $builder->setTitle('Loading...');
@@ -15,6 +15,6 @@ class InitialEmbed
         $builder->setInfo();
 
         $messageBuilder = MessageBuilder::buildMessage($builder);
-        $interaction->respondWithMessage($messageBuilder, $ephemeral);
+        return $interaction->respondWithMessage($messageBuilder, $ephemeral);
     }
 }

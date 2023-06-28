@@ -6,7 +6,7 @@ use Discord\Builders\MessageBuilder;
 use Discord\Parts\Embed\Embed;
 use Discord\Discord;
 
-class EmbedBuilder extends MessageBuilder
+class EmbedBuilder
 {
     public $embed;
     public Discord $discord;
@@ -103,4 +103,5 @@ class EmbedBuilder extends MessageBuilder
     {
         return $this->embed;
     }
+
 }

@@ -72,6 +72,8 @@ class Spotify
         $ephemeral = $optionRepository['ephemeral']->value ?? false;
         $me = SpotifyModel::connect($user_id);
 
+        $channel_id = $interaction->channel_id;
+
 
         switch (true) {
             case $login:
@@ -81,9 +83,9 @@ class Spotify
                 $this->logout($interaction, $discord, $user_id, $me);
                 break;
             case $me:
-                InitialEmbed::Send($interaction, $discord, 'Please wait while we are fetching your profile', true);
-
-                SpotifyUser::dispatch($user_id, $interaction, $ephemeral);
+                InitialEmbed::Send($interaction, $discord, 'Please wait', true)->done(function () use ($interaction, $discord, $user_id, $ephemeral, $channel_id) {
+                    SpotifyUser::dispatch($user_id, $ephemeral, $interaction);
+                });
                 break;
         }
     }
@@ -94,12 +96,12 @@ class Spotify
 
     private function login(Interaction $interaction, Discord $discord, $user_id, $me): void
     {
-        if ($me){
+        if (!$me){
             Error::sendError($interaction, $discord, 'You are already connected to Spotify');
             return;
         }
 
-        $url = "https://accounts.spotify.com/authorize?client_id={$_ENV['SPOTIFY_CLIENT_ID']}&response_type=code&redirect_uri={$_ENV['SPOTIFY_REDIRECT_URI']}&scope=user-read-email%20user-read-private%20user-library-read%20user-top-read%20user-read-recently-played%20user-read-playback-state%20user-read-currently-playing%20user-follow-read%20user-read-playback-position%20playlist-read-private%20playlist-modify-public%20playlist-modify-private%20playlist-read-collaborative%20user-library-modify%20user-follow-modify%20user-modify-playback-state%20user-read-recently-played%20user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-read-playback-position%20user-read-recently-played%20user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-read-playback-position%20user-read-recently-played%20user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-read-playback-position%20user-read-recently-played%20user-read-playback-state%20user-modify-playback-state&state={$user_id}";
+        $url = "https://accounts.spotify.com/authorize?client_id={$_ENV['SPOTIFY_CLIENT_ID']}&response_type=code&redirect_uri={$_ENV['SPOTIFY_REDIRECT_URI']}&scope=user-read-email%20user-read-private%20user-library-read%20user-top-read%20user-read-recently-played%20user-read-playback-state%20user-read-currently-playing%20user-follow-read%20user-read-playback-position%20playlist-read-private%20playlist-modify-public%20playlist-modify-private%20playlist-read-collaborative%20user-library-modify%20user-follow-modify%20user-modify-playback-state&state={$user_id}";
 
         $builder = Success::sendSuccess($discord, 'Spotify', '[Click here to login](' . $url . ')', $interaction);
 
