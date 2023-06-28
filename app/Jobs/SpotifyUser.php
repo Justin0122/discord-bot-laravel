@@ -19,7 +19,6 @@ class SpotifyUser implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected string $user_id;
-    protected bool $ephemeral;
     protected string $channel_id;
     private Interaction $interaction;
     protected string $avatarUrl;
@@ -27,10 +26,9 @@ class SpotifyUser implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($user_id, $ephemeral = false, $interaction = null)
+    public function __construct($user_id, $interaction)
     {
         $this->user_id = $user_id;
-        $this->ephemeral = $ephemeral;
         $this->channel_id = $interaction->channel_id;
         $this->avatarUrl = $interaction->member->user->avatar;
     }

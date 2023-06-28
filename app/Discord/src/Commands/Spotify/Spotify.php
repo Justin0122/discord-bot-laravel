@@ -82,7 +82,7 @@ class Spotify
                 break;
             case $me:
                 InitialEmbed::Send($interaction, $discord, 'Please wait', true)->done(function () use ($interaction, $discord, $user_id, $ephemeral) {
-                    SpotifyUser::dispatch($user_id, $ephemeral, $interaction);
+                    SpotifyUser::dispatch($user_id, $interaction);
                 });
                 break;
         }
