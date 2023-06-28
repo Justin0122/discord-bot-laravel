@@ -38,7 +38,6 @@ class SpotifyUser implements ShouldQueue
         $this->interaction = $interaction;
         $this->channel_id = $this->interaction->channel_id;
         $this->ephemeral = $ephemeral;
-        print_r($this->interaction);
     }
 
     /**
@@ -56,7 +55,6 @@ class SpotifyUser implements ShouldQueue
 
             $this->discord->on('ready', function (Discord $discord) use ($channel_id, $me) {
 
-                $channel = $discord->getChannel($channel_id);
                 $builder = new EmbedBuilder($discord);
                 $builder->setTitle($me->display_name);
                 $builder->setDescription('');
@@ -93,20 +91,12 @@ class SpotifyUser implements ShouldQueue
                 }
 
                 $embed = $builder->build();
-
-                //find the interaction in the channel
-                echo "Finding interaction: {$this->interaction->id}\n";
-                echo "Channel: {$this->interaction->channel_id}\n";
-                echo "Guild: {$this->interaction->guild_id}\n";
-                echo "User: {$this->interaction->user->id}\n";
-
-                $channel->messages->fetch($this->interaction->id)->done(function ($message) use ($discord, $embed) {
-                    $message->delete();
-                    $message->channel->sendMessage(MessageBuilder::new()->addEmbed($embed))->done(function ($message) use ($discord) {
-                        $message->delete();
-                        $discord->close();
+                    $channel = $discord->getChannel($channel_id);
+                    $channel?->sendEmbed($embed)->done(function () {
+                        $this->discord->close();
                     });
-                });
+
+
             });
         $this->discord->run();
     }

@@ -72,8 +72,6 @@ class Spotify
         $ephemeral = $optionRepository['ephemeral']->value ?? false;
         $me = SpotifyModel::connect($user_id);
 
-        $channel_id = $interaction->channel_id;
-
 
         switch (true) {
             case $login:
@@ -83,7 +81,7 @@ class Spotify
                 $this->logout($interaction, $discord, $user_id, $me);
                 break;
             case $me:
-                InitialEmbed::Send($interaction, $discord, 'Please wait', true)->done(function () use ($interaction, $discord, $user_id, $ephemeral, $channel_id) {
+                InitialEmbed::Send($interaction, $discord, 'Please wait', true)->done(function () use ($interaction, $discord, $user_id, $ephemeral) {
                     SpotifyUser::dispatch($user_id, $ephemeral, $interaction);
                 });
                 break;
